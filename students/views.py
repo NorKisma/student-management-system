@@ -4,6 +4,20 @@ from django.urls import reverse
 
 from .models import Student
 from .forms import StudentForm
+from students.forms import LoginForm
+
+from .models import Signup
+from .forms import StudentSignupForm
+from django.contrib.auth import authenticate, login
+
+
+
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
+
+
 
 
 # Create your views here.
@@ -71,3 +85,62 @@ def delete(request, id):
     student = Student.objects.get(pk=id)
     student.delete()
   return HttpResponseRedirect(reverse('index'))
+
+
+
+def signup(request):
+    if request.method == "POST":
+        form = StudentSignupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, "students/signup.html", {"success": True})
+    else:
+        form = StudentSignupForm()
+    
+    return render(request, "students/signup.html", {"form": form})
+
+
+
+
+def student_login(request):
+    error = False
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            
+            # Authenticate the user
+            user = authenticate(request, username=email, password=password)
+            
+            if user:
+                login(request, user)  # Log the user in
+                return redirect('index')  # Redirect to a specific page after successful login
+            else:
+                error = True  # Set error flag if authentication fails
+    else:
+        form = LoginForm()
+
+    return render(request, "students/login.html", {"form": form, "error": error})
+
+
+
+# In views.py
+
+
+def reset_password(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            try:
+                user = User.objects.get(email=email)
+                # Send a password reset link (Django handles this automatically)
+                form.save(request=request)
+                return render(request, 'password_reset_done.html')
+            except User.DoesNotExist:
+                return render(request, 'password_reset.html', {'form': form, 'error': 'No user with that email address.'})
+    else:
+        form = PasswordResetForm()
+    return render(request, 'password_reset.html', {'form': form})
+

@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'students',
+    
+    
 ]
 
 MIDDLEWARE = [
@@ -55,7 +57,7 @@ ROOT_URLCONF = 'django_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # Add this line if missing
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,7 +70,10 @@ TEMPLATES = [
     },
 ]
 
+
+
 WSGI_APPLICATION = 'django_project.wsgi.application'
+
 
 
 # Database
@@ -99,6 +104,20 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('nor.jws@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('nor.jws@gmail.com')
+
 
 
 # Internationalization
