@@ -96,7 +96,6 @@ def student_login(request):
 
     return render(request, "students/login.html", {"form": form, "error": error})
   
-  
 
 
 class CustomPasswordResetForm(PasswordResetForm):

@@ -15,3 +15,6 @@ class SignupAdmin(admin.ModelAdmin):
 # Register the models with their customized admin configurations
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Signup, SignupAdmin)
+
+
+

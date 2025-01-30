@@ -14,6 +14,8 @@ class StudentModelUnitTestCase(TestCase):
             gpa=3.92
         )
 
+
+
     def test_student_model(self):
         data = self.student
         self.assertIsInstance(data, Student)
